@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        label, input {
+            display: block;
+            margin: 5px 0;
+        }
+        button {
+            margin-top: 10px;
+        }
+    </style>
+    <script>
+        async function handleSubmit(event, endpoint, method, data) {
+            event.preventDefault();
+            try {
+                const response = await fetch(endpoint, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const result = await response.json();
+                alert('Success: ' + JSON.stringify(result));
+                document.getElementById('response').innerText = JSON.stringify(result, null, 2);
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+
+        function registerCustomer(event) {
+            const customer = {
+                username: document.getElementById('regUsername').value,
+                password: document.getElementById('regPassword').value,
+                email: document.getElementById('regEmail').value,
+                active: true
+            };
+            handleSubmit(event, '/api/customers/regis', 'POST', customer);
+        }
+
+        function updateCustomer(event) {
+            const id = document.getElementById('updId').value;
+            const customer = {
+                username: document.getElementById('updUsername').value,
+                password: document.getElementById('updPassword').value,
+                email: document.getElementById('updEmail').value,
+                active: document.getElementById('updActive').checked
+            };
+            handleSubmit(event, `/api/customers/${id}`, 'PUT', customer);
+        }
+
+        function activateCustomer(event) {
+            const id = document.getElementById('actId').value;
+            handleSubmit(event, `/api/customers/${id}/activate`, 'PATCH');
+        }
+
+        function deactivateCustomer(event) {
+            const id = document.getElementById('deactId').value;
+            handleSubmit(event, `/api/customers/${id}/deactivate`, 'PATCH');
+        }
+
+        function deleteCustomer(event) {
+            const id = document.getElementById('delId').value;
+            handleSubmit(event, `/api/customers/${id}`, 'DELETE');
+        }
+
+        async function getCustomerById(event) {
+            event.preventDefault();
+            const id = document.getElementById('getId').value;
+            try {
+                const response = await fetch(`/api/customers/${id}`);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const result = await response.json();
+                document.getElementById('response').innerText = JSON.stringify(result, null, 2);
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+
+        async function getAllCustomers(event) {
+            event.preventDefault();
+            try {
+                const response = await fetch('/api/customers/allcustomers');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const result = await response.json();
+                document.getElementById('response').innerText = JSON.stringify(result, null, 2);
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Customer Management</h1>
+
+    <h2>Register Customer</h2>
+    <form onsubmit="registerCustomer(event)">
+        <label for="regUsername">Username:</label>
+        <input type="text" id="regUsername" required>
+        <label for="regPassword">Password:</label>
+        <input type="password" id="regPassword" required>
+        <label for="regEmail">Email:</label>
+        <input type="email" id="regEmail" required>
+        <button type="submit">Register</button>
+    </form>
+
+    <h2>Update Customer</h2>
+    <form onsubmit="updateCustomer(event)">
+        <label for="updId">Customer ID:</label>
+        <input type="number" id="updId" required>
+        <label for="updUsername">Username:</label>
+        <input type="text" id="updUsername">
+        <label for="updPassword">Password:</label>
+        <input type="password" id="updPassword">
+        <label for="updEmail">Email:</label>
+        <input type="email" id="updEmail">
+        <label for="updActive">Active:</label>
+        <input type="checkbox" id="updActive">
+        <button type="submit">Update</button>
+    </form>
+
+    <h2>Activate/Deactivate Customer</h2>
+    <form onsubmit="activateCustomer(event)">
+        <label for="actId">Customer ID:</label>
+        <input type="number" id="actId" required>
+        <button type="submit">Activate</button>
+    </form>
+    <form onsubmit="deactivateCustomer(event)">
+        <label for="deactId">Customer ID:</label>
+        <input type="number" id="deactId" required>
+        <button type="submit">Deactivate</button>
+    </form>
+
+    <h2>Delete Customer</h2>
+    <form onsubmit="deleteCustomer(event)">
+        <label for="delId">Customer ID:</label>
+        <input type="number" id="delId" required>
+        <button type="submit">Delete</button>
+    </form>
+
+    <h2>Get Customer by ID</h2>
+    <form onsubmit="getCustomerById(event)">
+        <label for="getId">Customer ID:</label>
+        <input type="number" id="getId" required>
+        <button type="submit">Get</button>
+    </form>
+
+    <h2>Get All Customers</h2>
+    <form onsubmit="getAllCustomers(event)">
+        <button type="submit">Get All</button>
+    </form>
+
+    <h2>Response</h2>
+    <pre id="response"></pre>
+</body>
+</html>

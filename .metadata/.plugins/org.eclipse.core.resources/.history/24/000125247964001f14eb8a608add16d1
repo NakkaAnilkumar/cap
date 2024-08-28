@@ -1,0 +1,46 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Registration</title>
+    <link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/style.css' />">
+</head>
+<body>
+    <h2>Customer Registration</h2>
+    <form action="<c:url value='/api/customers/register' />" method="post">
+        <div>
+            <label for="firstName">First Name:</label>
+            <input type="text" id="firstName" name="firstName" value="${customer.firstName}" required />
+        </div>
+        <div>
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" name="lastName" value="${customer.lastName}" required />
+        </div>
+        <div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" value="${customer.email}" required />
+        </div>
+        <div>
+            <label for="phone">Phone:</label>
+            <input type="tel" id="phone" name="phone" value="${customer.phone}" required />
+        </div>
+        <div>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required />
+        </div>
+        <div>
+            <label for="confirmPassword">Confirm Password:</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" required />
+        </div>
+        <div>
+            <input type="submit" value="Register" />
+        </div>
+    </form>
+    <p>
+        <a href="<c:url value='/login' />">Already have an account? Log in here.</a>
+    </p>
+</body>
+</html>
